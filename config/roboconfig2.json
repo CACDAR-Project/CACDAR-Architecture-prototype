@@ -1,0 +1,6 @@
+{
+    "parameters": {"coordinates": {"x": 4, "y": 1}, "garbageHeld": 0},
+    "sensors": [{"name": "cameraView"}, {"name": "mapInformation"}],
+    "decisionLogic": "allNodesBruteForce",
+    "actions": [{"name": "move"}, {"name": "collectGarbage"}]
+}
