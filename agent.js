@@ -32,7 +32,7 @@ class Agent {
 
     initLogic(decisionLogic) {
         let Logic = require(process.cwd() + '/decisionLogic/' + decisionLogic + ".js");
-        this.decisionLogic = new Logic(this.environment);
+        this.decisionLogic = new Logic();
     }
 
     initActions(actionList) {

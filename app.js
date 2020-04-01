@@ -2,7 +2,7 @@ let environment = {agents: [], grid: [], freeSquares: [], messages: []};
 
 // Read the map file, get whole grid of tiles + separate list of free tiles (for use in functions)
 let MapReader = require(process.cwd() + '/mapReader');
-let reader = new MapReader("areamap");
+let reader = new MapReader("areamap2");
 let grid = reader.grid;
 let freeSquares = reader.freeSquaresToList();
 environment.grid = grid;

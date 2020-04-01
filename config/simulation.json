@@ -1,0 +1,23 @@
+{
+  "environment:": {
+    "mapFile": "areamap",
+    "spawnConfig": {
+      "interval": 9,
+      "simultaneous": 2
+    }
+  },
+  "agents": [
+    {
+      "parameters": {"coordinates": {"x": 2, "y": 1}, "garbageHeld": 0, "maxGarbage": 2},
+      "sensors": [{"name": "cameraView", "parameters": {"range": 2}}, {"name": "mapInformation"}],
+      "decisionLogic": "allNodesBruteForce",
+      "actions": [{"name": "move"}, {"name": "collectGarbage"}]
+    },
+    {
+      "parameters": {"coordinates": {"x": 4, "y": 1}, "garbageHeld": 0},
+      "sensors": [{"name": "cameraView"}, {"name": "mapInformation"}],
+      "decisionLogic": "allNodesBruteForce",
+      "actions": [{"name": "move"}, {"name": "collectGarbage"}]
+    }
+  ]
+}

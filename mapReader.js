@@ -1,7 +1,7 @@
 class MapReader {
 
     constructor(mapName) {
-        let map = this.readMapFile("/config/" + mapName);
+        let map = this.readMapFile("/config/maps/" + mapName);
         this.grid = [];
 
         for (let row of map) {

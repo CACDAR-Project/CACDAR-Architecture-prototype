@@ -19,6 +19,10 @@ class CameraView {
             return {name: "garbageSpotted"};
         }
 
+        if (current === 'T') {
+            return {name: "atTrashCan"};
+        }
+
         return [];
     };
 }
