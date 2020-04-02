@@ -4,7 +4,9 @@ class MessageReceiver {
     }
 
     perceive(agentParams, environment) {
-        return {name: "messages", content: environment.messages};
+        let info = [{name: "messages", content: agentParams.messages.concat()}];
+        agentParams.messages = [];
+        return info;
     }
 }
 

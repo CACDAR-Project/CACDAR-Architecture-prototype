@@ -5,30 +5,25 @@ class Logic {
     constructor() {
         this.gridBFS = require(process.cwd() + '/decisionLogic/algorithms/gridBFS.js');
         this.remainingPath = [];
-        this.interruptPath = false;
         this.visitList = [];
         this.nextToVisit = 0;
     }
 
-    next(agentParams, sensorInfo) {
-        if (this.visitList.length > 0) {
-            this.updateVisitList(agentParams.coordinates);
-        }
+    next(agentParams, sensorInfo, actionList) {
+        if (agentParams.waitingAction) return null;
+        if (this.visitList.length > 0) this.updateVisitList(agentParams.coordinates);
 
-        let exploring = this.checkIfCanExplore(agentParams);
+        let action = this.handleSensorInfo(agentParams, sensorInfo, actionList);
+        if (action) return action;
 
-        let action = this.handleSensorInfo(agentParams, sensorInfo, exploring);
-        if (action) {
-            return action;
-        }
-
-        return this.movementLogic(agentParams, exploring);
+        let target = this.checkForTargets(agentParams, sensorInfo, actionList);
+        return this.movementLogic(agentParams, target);
     };
 
     initializeVisitList(grid) {
         for (let y = 0; y < grid.length; ++y) {
             for (let x = 0; x < grid[y].length; ++x) {
-                if (grid[y][x]!=='#') {
+                if (grid[y][x] !== '#') {
                     this.visitList.push({x: x, y: y, symbol: grid[y][x], visited: -1});
                 }
             }
@@ -44,14 +39,43 @@ class Logic {
                 node.visited++;
             }
 
-            if (node.visited === -1 || (this.nextToVisit!== -1 && node.visited > this.nextToVisit)) {
+            if (node.visited === -1 || (this.nextToVisit !== -1 && node.visited > this.nextToVisit)) {
                 this.nextToVisit = node.visited;
             }
         }
     }
 
-    checkIfCanExplore(agentParams) {
-       return !this.tooMuchGarbage(agentParams);
+    checkForTargets(agentParams, sensorInfo, actionList) {
+        let target = this.checkHelpRequests(sensorInfo, actionList);
+
+        if (!target && this.tooMuchGarbage(agentParams)) return 'T';
+
+        return target;
+    }
+
+    checkHelpRequests(sensorInfo, actionList) {
+        for (let info of sensorInfo) {
+            if (info.name === "messages") {
+                for (let msg of info.content) {
+                    if (msg.type === "helpRequest") {
+                        if (this.hasAction(msg.content.actionName, actionList)) {
+                            this.interruptPath = true;
+                            return msg.content.coordinates;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    hasAction(actionName, actionList) {
+        for (let action of actionList) {
+            if (actionName === action.name) {
+                return true;
+            }
+        }
+        return false;
     }
 
     tooMuchGarbage(agentParams) {
@@ -59,18 +83,15 @@ class Logic {
             agentParams.garbageHeld >= agentParams.maxGarbage);
     }
 
-    movementLogic(agentParams, exploring) {
+    movementLogic(agentParams, target) {
         if (this.remainingPath.length === 0 || this.interruptPath) {
-            let pathFound = [];
-            if (exploring) {
-                pathFound = this.gridBFS(agentParams.coordinates, this.visitList, this.nextToVisit);
-            } else {
-                pathFound = this.gridBFS(agentParams.coordinates, this.visitList, 'T');
-            }
+            if (!target) target = this.nextToVisit;
+            let pathFound = this.gridBFS(agentParams.coordinates, this.visitList, target);
             if (pathFound && pathFound.length) {
                 this.remainingPath = pathFound;
                 this.remainingPath.shift();
             }
+            this.interruptPath = false;
         }
 
         let next = this.remainingPath.shift();
@@ -79,9 +100,12 @@ class Logic {
         }
     }
 
-    handleSensorInfo(agentParams, sensorInfo, exploring) {
+    handleSensorInfo(agentParams, sensorInfo, actionList) {
         for (let info of sensorInfo) {
             switch (info.name) {
+                case "agentWaitingHelp":
+                    if (this.hasAction(info.content.actionName, actionList)) return info.content;
+                    break;
                 case "garbageSpotted":
                     if (!this.tooMuchGarbage(agentParams)) return {actionName: "collectGarbage"};
                     break;
@@ -100,5 +124,8 @@ class Logic {
     }
 
 }
+
+
+
 
 module.exports = Logic;

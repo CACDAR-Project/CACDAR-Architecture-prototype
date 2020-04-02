@@ -12,7 +12,7 @@ module.exports = function (coord, squares, target) {
         let current = queue.shift();
 
         let square = squares.find(val => Utils.xyEqual(val, current));
-        if ((square.visited === target) || square.symbol === target) {
+        if (targetCheck(square, target)) {
             return current.path;
         }
 
@@ -31,4 +31,8 @@ module.exports = function (coord, squares, target) {
         }
     }
     return [];
+};
+
+let targetCheck = function(square, target) {
+    return square.visited === target || square.symbol === target || Utils.xyEqual(square, target);
 };

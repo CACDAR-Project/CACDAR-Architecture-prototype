@@ -1,4 +1,4 @@
-let environment = {agents: [], grid: [], freeSquares: [], messages: []};
+let environment = {agents: [], grid: [], freeSquares: []};
 
 // Read the map file, get whole grid of tiles + separate list of free tiles (for use in functions)
 let MapReader = require(process.cwd() + '/mapReader');
@@ -12,7 +12,8 @@ environment.freeSquares = freeSquares;
 let Agent = require(process.cwd() + '/agent.js');
 let robo1 = new Agent('roboconfig', environment);
 let robo2 = new Agent('roboconfig2', environment);
-environment.agents = [robo1, robo2];
+let robo3 = new Agent('roboconfig3', environment);
+environment.agents = [robo1, robo2, robo3];
 
 // Initialize visualization
 let Visualization = require(process.cwd() + '/visualization.js');

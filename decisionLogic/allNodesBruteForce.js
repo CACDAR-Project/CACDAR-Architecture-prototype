@@ -1,5 +1,7 @@
 let Utils = require(process.cwd() + '/utils.js');
 
+//// Outdated, won't work most likely
+
 // Logic class example, probably has to be split to more files
 class Logic {
 

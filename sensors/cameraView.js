@@ -1,3 +1,5 @@
+let Utils = require(process.cwd() + '/utils.js');
+
 class CameraView {
 
     constructor(parameters) {
@@ -10,20 +12,30 @@ class CameraView {
 
     // Longer range to be implemented
     perceive = function(agentParams, environment) {
+        let info = [];
+
         let x = agentParams.coordinates.x;
         let y = agentParams.coordinates.y;
 
         let current = environment.grid[y][x];
 
+        for (let agent of environment.agents) {
+            if (Utils.xyEqual(agentParams.coordinates, agent.parameters.coordinates)) {
+                if (agent.parameters.waitingAction) {
+                    info.push({name: "agentWaitingHelp", content: {actionName: agent.parameters.waitingAction, isHelpRequest: true}});
+                }
+            }
+        }
+
         if (current === '*') {
-            return {name: "garbageSpotted"};
+            info.push({name: "garbageSpotted"});
         }
 
         if (current === 'T') {
-            return {name: "atTrashCan"};
+            info.push({name: "atTrashCan"});
         }
 
-        return [];
+        return info;
     };
 }
 

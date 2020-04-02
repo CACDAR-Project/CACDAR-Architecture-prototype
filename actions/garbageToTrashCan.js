@@ -1,6 +1,6 @@
 module.exports.name = "garbageToTrashCan";
 
-module.exports.perform = function(actionParams, agentParams, environment) {
+module.exports.perform = function(command, agentParams, environment) {
     if (agentParams.garbageHeld) {
         agentParams.garbageHeld = 0;
 

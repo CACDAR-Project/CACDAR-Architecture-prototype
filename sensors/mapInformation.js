@@ -4,7 +4,7 @@ class CameraView {
     }
 
     perceive(agentParams, environment) {
-        return {name: "mapInformation", content: {grid: environment.grid, freeSquares: environment.freeSquares}};
+        return [{name: "mapInformation", content: {grid: environment.grid, freeSquares: environment.freeSquares}}];
     }
 }
 
