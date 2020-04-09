@@ -1,23 +1,35 @@
 {
-  "environment:": {
-    "mapFile": "areamap",
+  "environment": {
+    "mapFile": "areamap2",
     "spawnConfig": {
-      "interval": 9,
+      "interval": 12,
       "simultaneous": 2
     }
   },
   "agents": [
     {
-      "parameters": {"coordinates": {"x": 2, "y": 1}, "garbageHeld": 0, "maxGarbage": 2},
-      "sensors": [{"name": "cameraView", "parameters": {"range": 2}}, {"name": "mapInformation"}],
-      "decisionLogic": "allNodesBruteForce",
-      "actions": [{"name": "move"}, {"name": "collectGarbage"}]
+      "id": 1,
+      "x": 12,
+      "y": 6,
+      "config": "cleaningconfig"
     },
     {
-      "parameters": {"coordinates": {"x": 4, "y": 1}, "garbageHeld": 0},
-      "sensors": [{"name": "cameraView"}, {"name": "mapInformation"}],
-      "decisionLogic": "allNodesBruteForce",
-      "actions": [{"name": "move"}, {"name": "collectGarbage"}]
+      "id": 2,
+      "x": 12,
+      "y": 1,
+      "config": "cleaningconfig2"
+    },
+    {
+      "id": 3,
+      "x": 0,
+      "y": 1,
+      "config": "deliveryconfig"
+    },
+    {
+      "id": 4,
+      "x": 2,
+      "y": 6,
+      "config": "cleaningconfig"
     }
   ]
 }

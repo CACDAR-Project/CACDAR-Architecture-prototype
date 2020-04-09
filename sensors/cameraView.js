@@ -10,30 +10,40 @@ class CameraView {
         }
     }
 
-    // Longer range to be implemented
-    perceive = function(agentParams, environment) {
-        let info = [];
+    squareIsFree(square) {
+        return (square && square!=='#' && square !== 'C');
+    }
 
-        let x = agentParams.coordinates.x;
-        let y = agentParams.coordinates.y;
+    freeSquaresWithinSight(coords, grid) {
+        let frees = [];
+        let neighbors = Utils.getAdjacentCoordinates(coords);
 
-        let current = environment.grid[y][x];
-
-        for (let agent of environment.agents) {
-            if (Utils.xyEqual(agentParams.coordinates, agent.parameters.coordinates)) {
-                if (agent.parameters.waitingAction) {
-                    info.push({name: "agentWaitingHelp", content: {actionName: agent.parameters.waitingAction, isHelpRequest: true}});
-                }
+        for (let nb of neighbors) {
+            if (nb.y > 0 && nb.y < grid.length && nb.x > 0 && nb.x < grid[0].length) {
+                if (this.squareIsFree(grid[nb.y][nb.x])) frees.push(nb);
             }
         }
 
-        if (current === '*') {
-            info.push({name: "garbageSpotted"});
+        return frees;
+    }
+
+
+    // Longer range to be implemented...
+    perceive(agentParams, environment) {
+        let info = [];
+
+        info.push({name: "freeSquaresInSight", content: this.freeSquaresWithinSight(agentParams.coordinates, environment.grid)});
+
+        // Agents in the same square
+        for (let agent of environment.agents) {
+            if (Utils.xyEqualIdDifferent(agentParams, agent.parameters)) {
+                info.push({name: "agentSpotted", content: {id : agent.parameters.id, coordinates: agent.parameters.coordinates}});
+            }
         }
 
-        if (current === 'T') {
-            info.push({name: "atTrashCan"});
-        }
+        let x = agentParams.coordinates.x;
+        let y = agentParams.coordinates.y;
+        info.push({name: "currentTile", content: {tile: environment.grid[y][x], x: x, y: y}});
 
         return info;
     };

@@ -27,9 +27,9 @@ class Visualization {
                 let square = map[y][x];
                 let overlap = 0;
 
-                for (let coord of coords) {
-                    if (x === coord.x && y === coord.y) {
-                        overlap++;
+                for (let i = 0; i<coords.length; ++i) {
+                    if (x === coords[i].x && y === coords[i].y) {
+                        overlap += i + 1;
                     }
                 }
 

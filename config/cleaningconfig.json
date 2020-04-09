@@ -1,0 +1,7 @@
+{
+    "parameters": {"garbageHeld": 0, "maxGarbage": 2},
+    "sensors": [{"name": "cameraView", "parameters": {"range": 2}}, {"name": "mapInformation"}, {"name": "messageReceiver"}],
+    "decisionLogic": "garbageCollection",
+    "actions": [{"name": "move"}, {"name": "collectGarbage"}, {"name": "garbageToTrashCan"}, {"name": "initializeMap"},
+        {"name": "openDoor"}, {"name": "closeDoor"}, {"name": "guidance"}]
+}

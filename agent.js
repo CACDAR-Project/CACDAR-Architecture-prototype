@@ -1,24 +1,19 @@
 class Agent {
 
-    constructor(configName, environment) {
+    constructor(config, environment) {
         this.sensors = [];
         this.actions = [];
         this.fallback = null;
         this.sensorInfo = [];
         this.commands = [];
         this.environment = environment;
-        this.initWithConfig(configName);
+        this.initWithConfig(config);
     }
 
-    initWithConfig(configName) {
-        let config = require(process.cwd() + '/config/' + configName + ".json");
-
-        if (config===null) {
-            console.log("No proper .json config provided!");
-            return;
-        }
-
+    initWithConfig(config) {
         this.parameters = config.parameters;
+        this.parameters.id = config.id;
+        this.parameters.messages = [];
         this.actionList = config.actions;
         this.initSensors(config.sensors);
         this.initLogic(config.decisionLogic);
@@ -34,8 +29,8 @@ class Agent {
     }
 
     initLogic(decisionLogic) {
-        let Logic = require(process.cwd() + '/decisionLogic/' + decisionLogic + ".js");
-        this.decisionLogic = new Logic();
+        let Logic = require(process.cwd() + '/decisionLogic/baseLogic.js');
+        this.decisionLogic = new Logic(decisionLogic);
     }
 
     initActions(actionList) {
@@ -55,7 +50,7 @@ class Agent {
     act() {
         this.processSensors();
         this.decisionMaking();
-        this.performAction();
+        this.performActions();
     }
 
     processSensors() {
@@ -67,14 +62,16 @@ class Agent {
     }
 
     decisionMaking() {
-        let nextCommand = this.decisionLogic.next(this.parameters, this.sensorInfo, this.actionList);
-        this.commands.push(nextCommand);
+        this.commands = this.decisionLogic.nextStep(this.parameters, this.sensorInfo, this.actionList);
     }
 
-    performAction() {
-        let command = this.commands.shift();
-        if (command != null) {
-           this.processCommand(command);
+    performActions() {
+        if (this.commands) {
+            let command = this.commands.shift();
+            while (command) {
+                this.processCommand(command);
+                command = this.commands.shift();
+            }
         }
     }
 
@@ -95,12 +92,13 @@ class Agent {
         }
     }
 
-    // Do the requested action for any requesting agents in the same squaare
+    // Do the requested action for any requesting agents in the same square
     processHelpRequest(command, action) {
         for (let agent of this.environment.agents) {
-            if (agent.parameters.waitingAction === action.name) {
+            if (agent.parameters.pendingHelpRequest &&
+                    agent.parameters.pendingHelpRequest.actionName === action.name) {
                 action.perform(command, agent.parameters, this.environment);
-                agent.parameters.waitingAction = null;
+                agent.parameters.pendingHelpRequest = null;
                 return;
             }
         }

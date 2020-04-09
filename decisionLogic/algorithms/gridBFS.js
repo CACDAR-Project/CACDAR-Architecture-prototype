@@ -18,8 +18,7 @@ module.exports = function (coord, squares, target) {
 
         distances.push({x: current.x, y: current.y, distance: current.path.length});
 
-        let neighbors = [{x: current.x, y: current.y + 1}, {x: current.x + 1, y: current.y},
-            {x: current.x - 1, y: current.y}, {x: current.x, y: current.y - 1}];
+        let neighbors = Utils.getAdjacentCoordinates(current);
 
         for (let nb of neighbors) {
             if (!distances.some(val => Utils.xyEqual(val, nb)) &&
@@ -34,5 +33,8 @@ module.exports = function (coord, squares, target) {
 };
 
 let targetCheck = function(square, target) {
+    if (Array.isArray(target)) {
+        return target.some(val => Utils.xyEqual(val, square));
+    }
     return square.visited === target || square.symbol === target || Utils.xyEqual(square, target);
 };

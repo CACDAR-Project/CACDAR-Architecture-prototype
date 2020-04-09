@@ -1,6 +1,0 @@
-{
-    "parameters": {"coordinates": {"x": 4, "y": 1}, "garbageHeld": 0, "messages": []},
-    "sensors": [{"name": "cameraView"}, {"name": "mapInformation"}, {"name": "messageReceiver"}],
-    "decisionLogic": "garbageCollection",
-    "actions": [{"name": "move"}, {"name": "collectGarbage"}, {"name": "garbageToTrashCan"}]
-}

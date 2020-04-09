@@ -27,7 +27,7 @@ class MapReader {
 
         for (let row of this.grid) {
             for (let square of row) {
-                if (this.grid[y][x] === '0' || this.grid[y][x] === '.') {
+                if (this.grid[y][x] !== '#') {
                     freeSquares.push({x: x, y: y});
                 }
                 x++;

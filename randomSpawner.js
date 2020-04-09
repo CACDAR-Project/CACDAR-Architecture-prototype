@@ -1,7 +1,8 @@
+let Utils = require(process.cwd() + '/utils.js');
+
 class RandomSpawner {
 
-    constructor() {
-        let config = require(process.cwd() + "/config/randomspawnconfig.json");
+    constructor(config) {
 
         this.interval = 10;
         if (config.interval) {
@@ -16,16 +17,14 @@ class RandomSpawner {
         this.index = 0;
     }
 
-    getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
-    }
-
     spawnTrash(environment) {
         this.index++;
         if (this.index === this.interval) {
             for (let i = 0; i < this.simultaneous; ++i) {
-                let coord = environment.freeSquares[this.getRandomInt(environment.freeSquares.length)];
-                environment.grid[coord.y][coord.x] = '*';
+                let coord = environment.freeSquares[Utils.getRandomInt(environment.freeSquares.length)];
+                if (environment.grid[coord.y][coord.x] === '.'){
+                    environment.grid[coord.y][coord.x] = '*';
+                }
             }
             this.index = 0;
         }

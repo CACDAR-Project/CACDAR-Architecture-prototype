@@ -3,10 +3,11 @@ class MessageReceiver {
     constructor(parameters) {
     }
 
+    // Empty the messages after receiving
     perceive(agentParams, environment) {
-        let info = [{name: "messages", content: agentParams.messages.concat()}];
+        let msgs = agentParams.messages.concat();
         agentParams.messages = [];
-        return info;
+        return msgs;
     }
 }
 
