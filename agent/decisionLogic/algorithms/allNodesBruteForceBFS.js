@@ -1,4 +1,4 @@
-let Utils = require(process.cwd() + '/utils.js');
+let Utils = require(process.cwd() + '/tools/utils.js');
 
 // Finds the shortest path through ALL nodes from the current node, don't try this at home
 module.exports = function (coord, squares) {

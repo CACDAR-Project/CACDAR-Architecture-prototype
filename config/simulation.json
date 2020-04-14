@@ -1,6 +1,6 @@
 {
   "environment": {
-    "mapFile": "areamap2",
+    "mapFiles": ["areamap", "changedmap"],
     "spawnConfig": {
       "interval": 12,
       "simultaneous": 2

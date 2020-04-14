@@ -1,3 +1,5 @@
+let BFS = require(process.cwd() + "/agent/decisionLogic/algorithms/gridBFS.js");
+
 module.exports.xyEqual = function(a, b) {
     return a.x === b.x && a.y === b.y;
 };
@@ -34,3 +36,21 @@ module.exports.getAdjacentCoordinates = function(coords) {
     return [{x: x, y: y + 1}, {x: x + 1, y: y},
         {x: x - 1, y: y}, {x: x, y: y - 1}];
 };
+
+module.exports.closestAgentWithAction = function(command, agentParams, environment) {
+    let targetCoords = [];
+
+    // Search agents capable of the action
+    for (let agent of environment.agents) {
+        if (this.actionInList(command.actionName, agent.actionList) && agent.parameters.messages) {
+            targetCoords.push(agent.parameters.coordinates);
+        }
+    }
+
+    let path = BFS(agentParams.coordinates, environment.freeSquares, targetCoords);
+    let agentPosition = path[path.length - 1];
+    if (agentPosition) {
+        return environment.agents.find(val => this.xyEqual(agentPosition, val.parameters.coordinates));
+    }
+    return null;
+}

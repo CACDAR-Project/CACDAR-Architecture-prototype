@@ -1,6 +1,6 @@
-let Utils = require(process.cwd() + '/utils.js');
+let Utils = require(process.cwd() + '/tools/utils.js');
 
-let gridBFS = require(process.cwd() + '/decisionLogic/algorithms/gridBFS.js');
+let gridBFS = require(process.cwd() + '/agent/decisionLogic/algorithms/gridBFS.js');
 
 module.exports.algorithm = gridBFS;
 

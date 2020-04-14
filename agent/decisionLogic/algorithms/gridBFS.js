@@ -1,4 +1,4 @@
-let Utils = require(process.cwd() + '/utils.js');
+let Utils = require(process.cwd() + '/tools/utils.js');
 
 module.exports = function (coord, squares, target) {
     let x = coord.x;

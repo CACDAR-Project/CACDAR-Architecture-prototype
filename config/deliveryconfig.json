@@ -1,5 +1,5 @@
 {
-    "parameters": {},
+    "parameters": {"deliveryComplete" : false},
     "sensors": [{"name": "cameraView", "parameters": {"range": 2}}, {"name": "messageReceiver"}],
     "decisionLogic": "itemDelivery",
     "actions": [{"name": "move"}, {"name": "guidanceRequest"}, {"name": "exit"}]

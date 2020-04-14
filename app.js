@@ -1,18 +1,14 @@
 let environment = {agents: [], grid: [], freeSquares: []};
 
-// Initialize with config
+// Initialize from config
 let simConfig = require(process.cwd() + '/config/simulation.json');
 
 // Read the map file, get whole grid of tiles + separate list of free tiles (for use in functions)
-let MapReader = require(process.cwd() + '/mapReader');
-let reader = new MapReader(simConfig.environment.mapFile);
-let grid = reader.grid;
-let freeSquares = reader.freeSquaresToList();
-environment.grid = grid;
-environment.freeSquares = freeSquares;
+let MapReader = require(process.cwd() + '/tools/mapReader.js');
+let maps = simConfig.environment.mapFiles;
 
 // Initialize agents
-let Agent = require(process.cwd() + '/agent.js');
+let Agent = require(process.cwd() + '/agent/agent.js');
 for (let agent of simConfig.agents) {
 
     let obj = require(process.cwd() + '/config/' + agent.config + ".json");
@@ -27,15 +23,17 @@ for (let agent of simConfig.agents) {
 }
 
 // Initialize visualization
-let Visualization = require(process.cwd() + '/visualization.js');
+let Visualization = require(process.cwd() + '/tools/visualization.js');
 let GUI = new Visualization;
 
 // Initialize random garbage spawner
-let RandomSpawner = require(process.cwd() + '/randomSpawner.js');
+let RandomSpawner = require(process.cwd() + '/tools/randomSpawner.js');
 let spawner = new RandomSpawner(simConfig.environment.spawnConfig);
 
-// Visualize initial state
-GUI.visualize(environment);
+
+let loopCondition = function() {
+    return (!environment.nextMap);
+}
 
 // Call this to proceed
 let next = function() {
@@ -46,8 +44,26 @@ let next = function() {
     GUI.visualize(environment);
 };
 
-// Infinite loop for now, use with debug
-let active = true;
-while (active) {
-    next();
+while (maps.length) {
+    // Read the map file, get whole grid of tiles + separate list of free tiles (for use in functions)
+    let mapFile = maps.shift();
+    let reader = new MapReader(mapFile);
+    let grid = reader.grid;
+    let freeSquares = reader.freeSquaresToList();
+    environment.grid = grid;
+    environment.freeSquares = freeSquares;
+    environment.nextMap = false;
+
+    for (let agent of environment.agents) {
+        agent.resetConfigParameters();
+    }
+
+    // Visualize initial state
+    GUI.resetSteps();
+    GUI.visualize(environment);
+
+    // Infinite loop for now, use with debug
+    while (loopCondition()) {
+        next();
+    }
 }

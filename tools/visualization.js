@@ -4,6 +4,10 @@ class Visualization {
         this.step = 0;
     }
 
+    resetSteps() {
+        this.step = 0;
+    }
+
     // Print map with robots marked on it (number of robots on the same square)
     visualize(environment) {
         let map = environment.grid;

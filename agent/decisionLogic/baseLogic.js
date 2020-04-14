@@ -1,9 +1,9 @@
-let Utils = require(process.cwd() + '/utils.js');
+let Utils = require(process.cwd() + '/tools/utils.js');
 
 class Logic {
 
     constructor(logicName) {
-        this.specificLogic = require(process.cwd() + '/decisionLogic/' + logicName + ".js");
+        this.specificLogic = require(process.cwd() + '/agent/decisionLogic/' + logicName + ".js");
     }
 
     nextStep(agentParams, sensorInfo, actionList) {

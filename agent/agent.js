@@ -8,6 +8,7 @@ class Agent {
         this.commands = [];
         this.environment = environment;
         this.initWithConfig(config);
+        this.defaultParams = JSON.parse(JSON.stringify(config.parameters));
     }
 
     initWithConfig(config) {
@@ -23,27 +24,33 @@ class Agent {
 
     initSensors(sensorList) {
         for (let sensor of sensorList) {
-            let Sensor = require(process.cwd() + '/sensors/' + sensor.name + '.js');
+            let Sensor = require(process.cwd() + '/agent/sensors/' + sensor.name + '.js');
             this.sensors.push(new Sensor(sensor.parameters));
         }
     }
 
     initLogic(decisionLogic) {
-        let Logic = require(process.cwd() + '/decisionLogic/baseLogic.js');
+        let Logic = require(process.cwd() + '/agent/decisionLogic/baseLogic.js');
         this.decisionLogic = new Logic(decisionLogic);
     }
 
     initActions(actionList) {
         for (let action of actionList) {
-           let ActionFunction = require(process.cwd() + '/actions/' + action.name + '.js');
+           let ActionFunction = require(process.cwd() + '/agent/actions/' + action.name + '.js');
            this.actions.push(ActionFunction);
         }
     }
 
     initFallback(fallback) {
         if (fallback) {
-            let FallbackFunction = require(process.cwd() + '/actions/' + fallback.name + ".js");
+            let FallbackFunction = require(process.cwd() + '/agent/actions/' + fallback.name + ".js");
             this.fallback = FallbackFunction;
+        }
+    }
+
+    resetConfigParameters() {
+        for (let key in this.defaultParams) {
+           this.parameters[key] = this.defaultParams[key];
         }
     }
 
