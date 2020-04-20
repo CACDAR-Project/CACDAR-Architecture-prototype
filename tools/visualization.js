@@ -9,7 +9,7 @@ class Visualization {
     }
 
     // Print map with robots marked on it (number of robots on the same square)
-    visualize(environment) {
+    visualize(environment, allMessages) {
         let map = environment.grid;
 
         let coords = [];
@@ -17,10 +17,14 @@ class Visualization {
             coords.push(robo.parameters.coordinates);
         }
 
+        for (let agent of allMessages) {
+            console.log("Agent " + agent.id + " messages: " + JSON.stringify(agent.messages));
+        }
+
         let width = map[0].length;
         let height = map.length;
 
-        console.log("Step " + this.step);
+        console.log("\nStep " + this.step);
         this.step++;
 
         let rows = "";

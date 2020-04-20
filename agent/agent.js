@@ -1,6 +1,7 @@
 class Agent {
 
     constructor(config, environment) {
+        this.originalConfig = JSON.parse(JSON.stringify(config));
         this.sensors = [];
         this.actions = [];
         this.fallback = null;
@@ -8,7 +9,6 @@ class Agent {
         this.commands = [];
         this.environment = environment;
         this.initWithConfig(config);
-        this.defaultParams = JSON.parse(JSON.stringify(config.parameters));
     }
 
     initWithConfig(config) {
@@ -43,14 +43,14 @@ class Agent {
 
     initFallback(fallback) {
         if (fallback) {
-            let FallbackFunction = require(process.cwd() + '/agent/actions/' + fallback.name + ".js");
-            this.fallback = FallbackFunction;
+            this.fallback = require(process.cwd() + '/agent/actions/' + fallback.name + ".js");
         }
     }
 
     resetConfigParameters() {
-        for (let key in this.defaultParams) {
-           this.parameters[key] = this.defaultParams[key];
+        let tempCopy = JSON.parse(JSON.stringify(this.originalConfig.parameters))
+        for (let key in tempCopy) {
+           this.parameters[key] = tempCopy[key];
         }
     }
 

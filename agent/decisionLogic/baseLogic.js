@@ -14,7 +14,7 @@ class Logic {
             let target = this.specificLogic.checkForTargets(agentParams, sensorInfo, actionList);
             actions = this.pathFinding(agentParams, target);
         }
-        if (agentParams.guidanceTarget) {
+        if (agentParams.guidanceTarget && !agentParams.guidanceSource) {
             actions.push({actionName: "guidance", content: {id: agentParams.id, coordinates:
                             agentParams.coordinates}});
         }

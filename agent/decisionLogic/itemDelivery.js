@@ -14,15 +14,12 @@ module.exports.checkForTargets = function(agentParams, sensorInfo, actionList) {
     if (agentParams.hasMap && agentParams.deliveryComplete) {
         return 'E';
     } else if (agentParams.hasMap) {
-        return 'G';
+        return agentParams.goal;
     }
 };
 
 module.exports.processSensorInfo = function(agentParams, sensorInfo) {
     let actions = [];
-    let square;
-    let alreadyGuided;
-    let guidanceRequest;
 
     if (agentParams.currentTile) {
         let tileAction = tileActions(agentParams, sensorInfo);
@@ -35,33 +32,27 @@ module.exports.processSensorInfo = function(agentParams, sensorInfo) {
                 if (!agentParams.hasMap) actions.push({actionName: "initializeMap", content: info.content});
                 break;
             case "agentSpotted":
-                if (!agentParams.hasMap) {
-                    let target = 'G';
-                    if (agentParams.deliveryComplete) target = 'E';
-                    guidanceRequest = ({actionName: "guidanceRequest", content: {id: agentParams.id, target: target,
-                            coordinates: agentParams.coordinates}});
-                }
+                if (!agentParams.hasMap) startRequestingGuidance(agentParams);
                 break;
             case "guidance":
-                actions.push({actionName: "move", content: info.content.coordinates});
-                alreadyGuided = true;
-                break;
+                return [{actionName: "move", content: info.content.coordinates}];
             case "openDoor":
                 actions.push({actionName: "openDoor", content: info.content});
                 break;
         }
     }
 
-    if (!alreadyGuided && guidanceRequest) {
-        actions.push(guidanceRequest);
-    }
-
-    if (!actions.length && square && !agentParams.exit) {
-        actions.push({actionName: "move", content: square});
-    }
+    if (agentParams.pendingGuidanceRequest) return agentParams.pendingGuidanceRequest;
 
     return actions;
 };
+
+let startRequestingGuidance = function(agentParams) {
+    let target = agentParams.goal;
+    if (agentParams.deliveryComplete) target = 'E';
+    agentParams.pendingGuidanceRequest = [{actionName: "guidanceRequest", content: {id: agentParams.id,
+            target: target, coordinates: agentParams.coordinates}}];
+}
 
 let tileActions = function(agentParams) {
     switch(agentParams.currentTile.symbol) {
@@ -73,10 +64,12 @@ let tileActions = function(agentParams) {
                 */
                 agentParams.exit = true;
                 agentParams.hasMap = true;
+                agentParams.pendingGuidanceRequest = false;
             }
             break;
-        case "G":
+        case agentParams.goal:
             agentParams.deliveryComplete = true;
+            agentParams.pendingGuidanceRequest = false;
             break;
     }
 
@@ -86,10 +79,8 @@ let tileActions = function(agentParams) {
         let visited = agentParams.visitList.find(node => Utils.xyEqual(node, agentParams.currentTile));
         if (agentParams.currentTile.symbol !== 'O' && agentParams.currentTile.symbol !== '*'
             && agentParams.currentTile.symbol !== visited.symbol) {
-            let target = 'G';
-            if (agentParams.deliveryComplete) target = 'E';
-            return {actionName: "guidanceRequest", content: {id: agentParams.id, target: target,
-                    coordinates: agentParams.coordinates}};
+            visited.symbol = agentParams.currentTile.symbol;
+            startRequestingGuidance(agentParams);
         }
     }
 };

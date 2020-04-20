@@ -50,7 +50,8 @@ module.exports.closestAgentWithAction = function(command, agentParams, environme
     let path = BFS(agentParams.coordinates, environment.freeSquares, targetCoords);
     let agentPosition = path[path.length - 1];
     if (agentPosition) {
-        return environment.agents.find(val => this.xyEqual(agentPosition, val.parameters.coordinates));
+        return environment.agents.find(val => this.xyEqualIdDifferent(val.parameters,
+            {id: agentParams.id, coordinates: agentPosition}));
     }
     return null;
 }

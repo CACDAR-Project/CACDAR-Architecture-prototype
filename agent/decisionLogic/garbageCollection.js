@@ -11,6 +11,7 @@ module.exports.initialActions = function(agentParams) {
 module.exports.checkForTargets = function(agentParams, sensorInfo, actionList) {
     if (agentParams.helpTarget) return agentParams.helpTarget;
     checkHelpRequests(agentParams, sensorInfo, actionList);
+    if (agentParams.guidanceSource) return agentParams.guidanceSource;
     if (agentParams.guidanceTarget) return agentParams.guidanceTarget;
     if (tooMuchGarbage(agentParams)) return 'T';
 };
@@ -32,6 +33,9 @@ module.exports.processSensorInfo = function(agentParams, sensorInfo) {
                     agentParams.helpCommand = false;
                     agentParams.helpTarget = false;
                 }
+                if (info.content.id === agentParams.guidanceId) {
+                    agentParams.guidanceSource = false;
+                }
                 break;
             case "mapInformation":
                 if (!agentParams.hasMap) actions.push({actionName: "initializeMap", content: info.content});
@@ -43,6 +47,7 @@ module.exports.processSensorInfo = function(agentParams, sensorInfo) {
                 if (agentParams.guidanceId || agentParams.helpId) break;
                 agentParams.interruptPath = true;
                 agentParams.guidanceId = info.content.id;
+                agentParams.guidanceSource = info.content.coordinates;
                 agentParams.guidanceTarget = info.content.target;
                 break;
         }
@@ -65,6 +70,7 @@ let tileActions = function(agentParams) {
         case agentParams.guidanceTarget:
             agentParams.guidanceId = false;
             agentParams.guidanceTarget = false;
+            agentParams.guidanceSource = false;
             name = "move";
             break;
     }

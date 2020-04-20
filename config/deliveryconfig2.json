@@ -1,5 +1,5 @@
 {
-    "parameters": {"deliveryComplete" : false},
+    "parameters": {"deliveryComplete": false, "goal": "G"},
     "sensors": [{"name": "cameraView", "parameters": {"range": 2}}, {"name": "mapInformation"}, {"name": "messageReceiver"}],
     "decisionLogic": "itemDelivery",
     "actions": [{"name": "move"}, {"name": "initializeMap"}, {"name": "helpRequest"}, {"name": "exit"}],

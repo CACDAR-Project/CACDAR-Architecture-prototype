@@ -1,6 +1,7 @@
 {
-    "parameters": {"deliveryComplete" : false},
+    "parameters": {"deliveryComplete": false, "goal": "G"},
     "sensors": [{"name": "cameraView", "parameters": {"range": 2}}, {"name": "messageReceiver"}],
     "decisionLogic": "itemDelivery",
-    "actions": [{"name": "move"}, {"name": "guidanceRequest"}, {"name": "exit"}]
+    "actions": [{"name": "move"}, {"name": "guidanceRequest"}, {"name": "helpRequest"}, {"name": "exit"}],
+    "fallback": {"name": "helpRequest"}
 }
