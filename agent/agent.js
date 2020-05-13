@@ -52,6 +52,8 @@ class Agent {
         for (let key in tempCopy) {
            this.parameters[key] = tempCopy[key];
         }
+        this.parameters["messages"] = [];
+        this.parameters["remainingPath"] = [];
     }
 
     act() {
